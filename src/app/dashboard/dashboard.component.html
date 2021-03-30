@@ -1,0 +1,60 @@
+<!-- <div *ngIf="!showForm"   [ngClass]="!showTable ? 'middle' : ''" style="min-height: 70vh;"> -->
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 mt-5 search-box">
+        <!-- <div class="form-outline"> -->
+          <input type="search" id="form1" class="form-control" placeholder="Search Something" (keyup.enter)="searchResults()"
+          [(ngModel)]="searchText"/><i class="fa fa-search"></i>
+          <!-- <label class="form-label" for="form1">Search</label> -->
+        <!-- </div> -->
+      </div>
+      <div class="col-md-3"></div>
+</div>
+
+ 
+<div class="row pre_header mt-4" *ngIf="show" >
+  <div class="col-md-1"></div>
+    <div class="col-md-5">
+      <h6>Total <b>{{totalItems}}</b> results</h6>
+    </div>
+
+    <div class="col-md-5 text-right">
+      <span style="color: black; padding: 0px"> Go to  <b>Page</b> &nbsp;</span>
+
+      <input type="text" min="1" (change)="onGoPage($event);" class="form-control-sm go_to_input"
+             [(ngModel)]="currentPage"
+             aria-label="goto" title="goto"/>
+      - {{totalPages}} &nbsp;
+
+      <button class="btn btn-primary prev"
+              [class.disabled]="currentPage <=1"
+              (click)="!(currentPage <=1) && prev($event)"
+              aria-label="left">
+        <i class="fa fa-angle-left"></i></button>
+      &nbsp;
+
+      <button class="btn btn-primary prev"
+              [class.disabled]="currentPage >= totalPages"
+              (click)="!(currentPage >= totalPages) && next($event)"
+              aria-label="right">
+        <i class="fas fa-angle-right"></i>
+      </button>
+    </div>
+    <div class="col-md-1"></div>
+
+  </div>
+  
+  <!-- </div> -->
+  <div class="row mt-3">
+    <div class="col-md-1"></div>
+    <div class="col-md-10" *ngIf="totalItems>0">
+        <div *ngFor="let items of results">
+            <h5><a [href]="items.link"  target="_blank" >{{items.title}}</a></h5>
+            <p>{{items.body_markdown}}</p>
+            <h6><span class="badge badge-secondary ml-1" *ngFor="let tag of items.tags">{{tag}}</span></h6>
+            <hr>
+        </div>
+        
+    </div>
+    <div class="col-md-1"></div>
+  </div>
