@@ -10,6 +10,7 @@ export class DashboardComponent implements OnInit {
  searchText;
  results: any;
  show : boolean = false;
+ loading : boolean = false;
 
  //pagination
  currentPage: number = 1;
@@ -21,29 +22,24 @@ export class DashboardComponent implements OnInit {
  end: number;
   constructor( private apiService : DashboardService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
-  search(){
-    this.start=this.start+1;
-    this.currentPage=1;
-    this.searchResults();
-  }
-  
+
 
   searchResults(){
     this.results=[];
     this.show=true;
+    this.loading=true;
     this.apiService.getAdvancedSearch(this.searchText).subscribe(res => {
-      console.log(res)
+      this.loading=false;
       this.results=res['items'];
       this.totalItems=res['total'];
       this.start=res['page'];
       this.pageOffset=res['page_size'];
+      this.start=this.start+1;
+      this.currentPage=1;
       this.setPageLogic();
-      this.lastNumberOfPage();
-      
-      
+      this.lastNumberOfPage();   
     })
    
   }
@@ -60,32 +56,26 @@ export class DashboardComponent implements OnInit {
   }
 
   next(event) {
-    // this.hideTable=false;
-    // event.stopPropagation();
-    // this.start = this.start + this.pageOffset;
-    // this.currentPage = +this.currentPage + 1;
-    // this.currentPageCopy = +this.currentPage;
-    // this.getTableData();
-    this.search();
+    event.stopPropagation();
+    this.start = this.start + this.pageOffset;
+    this.currentPage = +this.currentPage + 1;
+    this.currentPageCopy = +this.currentPage;
+    this.searchResults();
     this.lastNumberOfPage();
   }
 
   prev(event) {
-    // this.hideTable=false;
     event.stopPropagation();
     this.start = this.start - this.pageOffset;
     this.currentPage = +this.currentPage - 1;
     this.currentPageCopy = +this.currentPage;
-    this.search();
+    this.searchResults();
     this.lastNumberOfPage();
-    // this.urlFormatter();
   }
 
   onGoPage(event) {
     event.stopPropagation();
-
     let page = this.currentPage;
-
     if (this.isNumber(page)) {
       if (page >= 1 && page <= this.totalPages) {
         this.start = ((page * this.pageOffset) - this.pageOffset);
@@ -93,26 +83,17 @@ export class DashboardComponent implements OnInit {
         if (this.start == 1) {
           this.start = this.start+1;
         }
-
         this.currentPageCopy = +this.currentPage;
-
-        // this.getTableData();
-        this.search();
+        this.searchResults();
       } else {
         this.currentPage = +this.currentPageCopy;
-        // this.toastr.warning('Error', 'Invalid page!');
-
       }
 
     } else {
       this.currentPage = +this.currentPageCopy;
-      // this.toastr.warning('Error', 'Invalid page!');
-
     }
 
     this.lastNumberOfPage();
-    //this.urlFormatter();
-
   }
 
   isNumber(text) {

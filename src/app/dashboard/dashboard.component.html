@@ -1,18 +1,18 @@
-<!-- <div *ngIf="!showForm"   [ngClass]="!showTable ? 'middle' : ''" style="min-height: 70vh;"> -->
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6 mt-5 search-box">
-        <!-- <div class="form-outline"> -->
-          <input type="search" id="form1" class="form-control" placeholder="Search Something" (keyup.enter)="searchResults()"
-          [(ngModel)]="searchText"/><i class="fa fa-search"></i>
-          <!-- <label class="form-label" for="form1">Search</label> -->
-        <!-- </div> -->
-      </div>
-      <div class="col-md-3"></div>
+         <input type="search" id="form1" class="form-control" placeholder="Search Something" (keyup.enter)="searchResults()"
+          [(ngModel)]="searchText"/><i class="fa fa-search mr-5"></i>
+    </div>
+     <div class="col-md-3"></div>
 </div>
 
- 
-<div class="row pre_header mt-4" *ngIf="show" >
+<div class="spinner-border mt-3" role="status" *ngIf="loading">
+  <span class="sr-only">Loading....</span>
+</div>
+
+ <!-- pagination -->
+<div class="row pre_header mt-4" *ngIf="totalItems>0 && show" >
   <div class="col-md-1"></div>
     <div class="col-md-5">
       <h6>Total <b>{{totalItems}}</b> results</h6>
@@ -24,7 +24,7 @@
       <input type="text" min="1" (change)="onGoPage($event);" class="form-control-sm go_to_input"
              [(ngModel)]="currentPage"
              aria-label="goto" title="goto"/>
-      - {{totalPages}} &nbsp;
+            - {{totalPages}} &nbsp;
 
       <button class="btn btn-primary prev"
               [class.disabled]="currentPage <=1"
@@ -44,7 +44,7 @@
 
   </div>
   
-  <!-- </div> -->
+
   <div class="row mt-3">
     <div class="col-md-1"></div>
     <div class="col-md-10" *ngIf="totalItems>0">
